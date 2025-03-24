@@ -1,13 +1,21 @@
 {
   "version": 2,
-  "buildCommand": "next build",
+  "buildCommand": "npm run build",
   "installCommand": "npm install",
   "framework": "nextjs",
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/next"
+      "use": "@vercel/next",
+      "config": {
+        "installCommand": "npm install && npm install autoprefixer postcss tailwindcss file-selector attr-accept --save"
+      }
     }
   ],
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY": "@next_public_google_maps_api_key"
+    }
+  }
 } 
