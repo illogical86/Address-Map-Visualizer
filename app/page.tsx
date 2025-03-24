@@ -3,8 +3,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import * as XLSX from 'xlsx';
-import AddressMap from '../src/components/AddressMap';
-import ExportMap from '../src/components/ExportMap';
+import AddressMap from './components/AddressMap';
+import ExportMap from './components/ExportMap';
 
 interface Address {
   id: string;
@@ -177,7 +177,7 @@ export default function Home() {
               <ExportMap addresses={addresses} />
             </div>
             <div className="h-[600px] rounded-lg overflow-hidden">
-              <AddressMap addresses={addresses} setAddresses={setAddresses} />
+              <AddressMap addresses={addresses} />
             </div>
           </>
         )}
