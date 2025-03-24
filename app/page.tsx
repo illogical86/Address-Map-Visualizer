@@ -3,8 +3,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import * as XLSX from 'xlsx';
-import AddressMap from '../src/components/AddressMap';
-import ExportMap from '../src/components/ExportMap';
+import AddressMap from '@/components/AddressMap';
+import ExportMap from '@/components/ExportMap';
 
 interface Address {
   id: string;
