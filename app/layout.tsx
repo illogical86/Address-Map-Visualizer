@@ -1,4 +1,10 @@
 import './globals.css'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Address Map Visualizer',
+  description: 'Upload your spreadsheet with addresses and visualize them on a map',
+}
 
 export default function RootLayout({
   children,
@@ -7,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-screen bg-white">
+        {children}
+      </body>
     </html>
   )
 } 
