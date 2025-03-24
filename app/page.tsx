@@ -39,7 +39,6 @@ export default function Home() {
           const sheet = workbook.Sheets[sheetName];
           const jsonData = XLSX.utils.sheet_to_json(sheet);
 
-          // Find the column that contains addresses
           const firstRow = jsonData[0] as any;
           const addressColumn = Object.keys(firstRow).find(key => 
             key.toLowerCase().includes('address') || 
@@ -50,7 +49,6 @@ export default function Home() {
             throw new Error('No address column found in the spreadsheet');
           }
 
-          // Extract categories if they exist
           const categoryColumn = Object.keys(firstRow).find(key =>
             key.toLowerCase().includes('category') ||
             key.toLowerCase().includes('type')
@@ -64,7 +62,6 @@ export default function Home() {
             category: categoryColumn ? row[categoryColumn] : undefined
           }));
 
-          // Extract unique categories
           if (categoryColumn) {
             const uniqueCategories = Array.from(new Set(addressList
               .map(addr => addr.category)
@@ -125,61 +122,65 @@ export default function Home() {
   }, [searchTerm, selectedCategory, originalData]);
 
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Address Map Visualizer</h1>
+    <main className="min-h-screen p-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <h1 className="text-4xl font-bold text-gray-900">Address Map Visualizer</h1>
         
-        <div className="mb-8 p-6 border-2 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200" {...getRootProps()}>
+        <div 
+          {...getRootProps()} 
+          className={`p-8 border-2 border-dashed rounded-lg transition-colors duration-200 cursor-pointer
+            ${isDragActive 
+              ? 'border-blue-500 bg-blue-50' 
+              : 'border-gray-300 hover:border-gray-400 bg-white'}`}
+        >
           <input {...getInputProps()} />
-          {isDragActive ? (
-            <p className="text-center text-gray-600">Drop the file here...</p>
-          ) : (
-            <p className="text-center text-gray-600">
-              Drag and drop an Excel file here, or click to select a file
-            </p>
-          )}
+          <p className="text-center text-gray-600">
+            {isDragActive
+              ? 'Drop the file here...'
+              : 'Drag and drop an Excel file here, or click to select a file'}
+          </p>
         </div>
 
         {error && (
-          <div className="mb-8 p-4 bg-red-100 text-red-700 rounded-lg">
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
             {error}
           </div>
         )}
 
         {addresses.length > 0 && (
-          <div className="mb-8 flex gap-4">
-            <input
-              type="text"
-              placeholder="Search addresses..."
-              className="flex-1 p-2 border rounded"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {categories.length > 0 && (
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="p-2 border rounded"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-        )}
+          <div className="space-y-6">
+            <div className="flex gap-4">
+              <input
+                type="text"
+                placeholder="Search addresses..."
+                className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {categories.length > 0 && (
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {categories.map(category => (
+                    <option key={category} value={category}>
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
 
-        {addresses.length > 0 && (
-          <>
-            <div className="mb-4">
-              <ExportMap addresses={addresses} />
+            <div className="bg-white rounded-lg shadow-sm p-4">
+              <div className="mb-4">
+                <ExportMap addresses={addresses} />
+              </div>
+              <div className="h-[600px] rounded-lg overflow-hidden border border-gray-200">
+                <AddressMap addresses={addresses} />
+              </div>
             </div>
-            <div className="h-[600px] rounded-lg overflow-hidden">
-              <AddressMap addresses={addresses} />
-            </div>
-          </>
+          </div>
         )}
       </div>
     </main>
